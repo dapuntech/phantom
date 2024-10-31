@@ -1,4 +1,4 @@
-# *Contributing ID*
+# *Contributing*
 
 ***Contributor***
 
