@@ -22,3 +22,6 @@ def show_package_info() -> Union[str, None]:
         except FileNotFoundError:
             logger.error("File Not Found")
             return None
+    else:
+        logger.error("Not Supported for non linux system")
+        return None
