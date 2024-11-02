@@ -44,7 +44,7 @@ def installation(package_name: str) -> Union[list, None]:
 
 
 def available_tool() -> None:
-    list_of_tool = ["sqlmap", "metasploit"]
+    list_of_tool = ["sqlmap", "metasploit", "nmap"]
     table = PrettyTable()
     table.field_names = ["Available Tool"]
     for angka, data in enumerate(list_of_tool):
@@ -61,6 +61,9 @@ def install_tool() -> None:
     if input_data == "1":
         print("installing sqlmap...")
         installation("sqlmap")
+    elif input_data == "3":
+        print("installing nmap...")
+        installation("nmap")
 
 
 if __name__ == "__main__":
