@@ -4,7 +4,16 @@ import subprocess
 def get_package_version(package_info: str | None, package_name: str) -> str:
     """
     Get the version of the package installed
+
+    Parameters:
+        package_info (str): The package manager used (apt or pacman)
+        package_name (str): The name of the package
     """
+
+    if not isinstance(package_info, str) and not isinstance(package_name, str):
+        print(
+            f"error: package_info and package_name must be string, got {type(package_info)}"
+        )
 
     if package_info == "apt":
         # Use apt-cache policy to get the installed version of the package

@@ -10,6 +10,8 @@ def debug_log(name: str, log_file: str, show_console: bool = False) -> None:
         log_file(str): file logger yang di save
         level(logging.DEBUG): default DEBUG
     """
+    if not isinstance(name, str) or not isinstance(log_file, str):
+        print(f"error: name and log_file must be string, got {type(name)}")
     debug_mode = logging.DEBUG
     logger = logging.getLogger(name)
     logger.setLevel(debug_mode)

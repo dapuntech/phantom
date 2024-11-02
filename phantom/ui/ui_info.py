@@ -7,15 +7,21 @@ from typing import Union
 import time
 import threading
 
-LINE = "-" * 25
+TAB: str = "\t" * 3
 package_info = sys_info.show_package_info()
 done = False
 
 
 def menu_banner() -> None:
-    print(f"{constant.GREEN}{LINE}{constant.RESET}")
-    print(f"{constant.RED}\tPhatom{constant.RESET}")
-    print(f"{constant.GREEN}{LINE}{constant.RESET}")
+    print(f"""{constant.BOLD}{constant.RED}
+██████╗░██╗░░██╗░█████╗░███╗░░██╗████████╗░█████╗░███╗░░░███╗
+██╔══██╗██║░░██║██╔══██╗████╗░██║╚══██╔══╝██╔══██╗████╗░████║
+██████╔╝███████║███████║██╔██╗██║░░░██║░░░██║░░██║██╔████╔██║
+██╔═══╝░██╔══██║██╔══██║██║╚████║░░░██║░░░██║░░██║██║╚██╔╝██║
+██║░░░░░██║░░██║██║░░██║██║░╚███║░░░██║░░░╚█████╔╝██║░╚═╝░██║
+╚═╝░░░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝░░░╚═╝░░░░╚════╝░╚═╝░░░░░╚═╝
+{constant.NEWLINE}
+""")
     print(
         f"{constant.GREEN}version: {constant.RESET}{constant.BOLD}{constant.VERSION}{constant.RESET}"
     )
@@ -24,13 +30,26 @@ def menu_banner() -> None:
 
 
 def menu_info() -> None:
-    print(f"{constant.NEWLINE}package info: {sys_info.show_package_info()}")
+    """
+    Information about menu information, currently showing
+        - available tool: list of tool available
+        - install tool: install tool
+    """
+    print(
+        f"{constant.GREEN}package info:{constant.RESET} {sys_info.show_package_info()}{constant.NEWLINE}"
+    )
     print(f"{constant.BOLD}1. Available Tool{constant.RESET}")
     print(f"{constant.BOLD}2. Install Tool{constant.RESET}")
 
 
 # Spinner function to display loading
-def spinner(package_name: str):
+def spinner(package_name: str) -> None:
+    """
+    Spinner function to display loading
+
+    Parameter:
+        package_name(str): package name to showing on package name
+    """
     # Define the spinner characters
     spinner_chars = ["⢿", "⣻", "⣽", "⣾", "⣷", "⣯", "⣟", "⡿"]
 
@@ -48,7 +67,7 @@ def spinner(package_name: str):
         time.sleep(0.1)
 
 
-def install(command: list[str], package_name: str) -> None:
+def run_install(command: list[str], package_name: str) -> None:
     global done
 
     # Create a thread to run the loading spinner
@@ -88,13 +107,17 @@ def install(command: list[str], package_name: str) -> None:
         print("\rError installing package")
 
 
-def installation(package_name: str) -> Union[list, None]:
+def install_package(package_name: str) -> Union[list, None]:
+    if not isinstance(package_name, str):
+        print(
+            f"{constant.RED}error:{constant.RESET}package must be string, not {type(package_name)}"
+        )
     if package_info == "apt":
         command = ["sudo", "apt-get", "install", package_name, "-y"]
-        install(command, package_name)
+        run_install(command, package_name)
     elif package_info == "pacman":
         command = ["sudo", "pacman", "-S", package_name, "--noconfirm"]
-        install(command, package_name)
+        run_install(command, package_name)
     elif package_info is None:
         print("Not Supported for non linux system")
     else:
@@ -113,21 +136,14 @@ def available_tool() -> None:
     for angka, data in enumerate(list_of_tool):
         table.add_row([f"{angka + 1}", data, f"{list_of_tool[data]}"])
     print(table)
-    # print(f"{constant.NEWLINE}{constant.BOLD}Available Tool{constant.RESET}")
-    # for number, data in enumerate(available_tool_hacking):
-    #     print(f"{constant.BOLD}{number + 1}.{data}{constant.RESET}")
 
 
 def install_tool() -> None:
     available_tool()
     input_data = input("enter your choice: ")
     if input_data == "1":
-        installation("sqlmap")
+        install_package("sqlmap")
     elif input_data == "2":
-        installation("metasploit")
+        install_package("metasploit")
     elif input_data == "3":
-        installation("nmap")
-
-
-if __name__ == "__main__":
-    print(installation())
+        install_package("nmap")
