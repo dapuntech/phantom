@@ -102,11 +102,16 @@ def installation(package_name: str) -> Union[list, None]:
 
 
 def available_tool() -> None:
-    list_of_tool = ["sqlmap", "metasploit", "nmap"]
+    list_of_tool = {
+        "sqlmap": "Automates SQL injection testing and exploitation.",
+        "metasploit": "Framework for developing and executing exploits.",
+        "nmap": "Comprehensive tool for network scanning and discovery.",
+    }
+
     table = PrettyTable()
-    table.field_names = ["Available Tool"]
+    table.field_names = ["No", "Available Tool", "Description"]
     for angka, data in enumerate(list_of_tool):
-        table.add_row([f"{angka + 1} . {data}"])
+        table.add_row([f"{angka + 1}", data, f"{list_of_tool[data]}"])
     print(table)
     # print(f"{constant.NEWLINE}{constant.BOLD}Available Tool{constant.RESET}")
     # for number, data in enumerate(available_tool_hacking):
