@@ -27,7 +27,7 @@ def menu_info() -> None:
 
 def installation(package_name: str) -> Union[list, None]:
     if package_info == "apt":
-        command = ["sudo", "apt", "get", "install", package_name, "-y"]
+        command = ["sudo", "apt-get", "install", package_name, "-y"]
     elif package_info == "pacman":
         command = ["sudo", "pacman", "-S", package_name, "--noconfirm"]
     elif package_info is None:
