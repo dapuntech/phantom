@@ -123,6 +123,8 @@ def install_tool() -> None:
     input_data = input("enter your choice: ")
     if input_data == "1":
         installation("sqlmap")
+    elif input_data == "2":
+        installation("metasploit")
     elif input_data == "3":
         installation("nmap")
 
