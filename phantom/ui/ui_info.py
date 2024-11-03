@@ -155,6 +155,9 @@ def available_tool() -> None:
 
 
 def install_tool() -> None:
+    """
+    function to install available tools
+    """
     available_tool()
     input_data = input("enter your choice for installation: ")
     match input_data:
