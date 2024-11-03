@@ -34,29 +34,42 @@ check_package_manager() {
   fi
 }
 
-clear
-echo "welcome..."
-sleep 1
-check_distro
-check_python_version
-check_package_manager
-sleep 1
-
-if command -v python3 &>/dev/null; then
-  echo "installing additional packages"
-  pip3 install -r requirements.txt --break-system-packages
+if [[ "$1" == "--install" ]]; then
   clear
-  python3 phantom/phantom.py
-elif command -v python &>/dev/null; then
-  echo "installing additional packages"
-  pip install -r requirements.txt --break-system-packages
-  clear
-  python phantom/phantom.py
-else
-  echo "python not installed, installing python..."
-  if command -v apt &>/dev/null; then
-    command sudo apt get install python
-  elif command -v pacman &>/dev/null; then
-    command sudo pacman -S python
+  echo "downloading phantom..."
+  git clone https://github.com/dapuntech/phantom.git
+  cd phantom
+  if command -v python3 &>/dev/null; then
+    echo "installing additional packages"
+    pip3 install -r requirements.txt --break-system-packages
+    clear
+    echo "phantom installed..."
+    echo "you can check on dir 'phantom'"
+    sleep 5
+    clear
+    python3 phantom/phantom.py
+  elif command -v python &>/dev/null; then
+    echo "installing additional packages"
+    pip install -r requirements.txt --break-system-packages
+    clear
+    echo "phantom installed..."
+    echo "you can check on dir 'phantom'"
+    sleep 5
+    clear
+    python phantom/phantom.py
+  else
+    echo "python not installed, installing python..."
+    if command -v apt &>/dev/null; then
+      command sudo apt get install python
+    elif command -v pacman &>/dev/null; then
+      command sudo pacman -S python
+    fi
+    echo "installed python..."
+    echo "running with argument"
+    echo "./Phantom --run"
+  fi
+  if [[ "$1" == "--run" ]]; then
+    clear
+    python3 phantom/phantom.py
   fi
 fi

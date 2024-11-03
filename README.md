@@ -6,7 +6,11 @@ All in one hacking tool for pentesters and security researchers, support all dis
 git clone https://github.com/dapuntech/phantom
 cd phantom
 chmod +x Phantom
-./Phantom
+./Phantom --install # to install phantom
+```
+or running with `python` directly
+```bash
+python phantom/phantom.py
 ```
 
 ## Contributing

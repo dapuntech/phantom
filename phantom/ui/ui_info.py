@@ -2,6 +2,7 @@ import util.constant as constant
 import util.package as sys_info
 import util.package as package_version
 import subprocess
+import json
 from prettytable import PrettyTable
 from typing import Union
 import time
@@ -142,11 +143,9 @@ def available_tool() -> None:
     """
     function to show available tool
     """
-    list_of_tool = {
-        "sqlmap": "Automates SQL injection testing and exploitation.",
-        "metasploit": "Framework for developing and executing exploits.",
-        "nmap": "Comprehensive tool for network scanning and discovery.",
-    }
+    with open("phantom/ui/list_of_tool.txt", "r") as file:
+        loaded_tool_list = json.load(file)
+    list_of_tool = loaded_tool_list
 
     table = PrettyTable()
     table.field_names = ["No", "Available Tool", "Description"]
@@ -158,9 +157,18 @@ def available_tool() -> None:
 def install_tool() -> None:
     available_tool()
     input_data = input("enter your choice for installation: ")
-    if input_data == "1":
-        install_package("sqlmap")
-    elif input_data == "2":
-        install_package("metasploit")
-    elif input_data == "3":
-        install_package("nmap")
+    match input_data:
+        case "1":
+            install_package("sqlmap")
+        case "2":
+            install_package("metasploit")
+        case "3":
+            install_package("nmap")
+        case "4":
+            install_package("aircrack-ng")
+        case "5":
+            install_package("airflood")
+        case _:
+            print(
+                f"{constant.message_color('red', 'invalid choice')}{constant.NEWLINE}{constant.message_color('yellow', 'TODO:')} implemented{constant.NEWLINE}"
+            )
