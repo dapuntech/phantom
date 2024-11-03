@@ -1,0 +1,62 @@
+#!/bin/bash
+
+check_distro() {
+    if [ -f /etc/os-release ]; then
+      . /etc/os-release
+      echo "linux Distros: $NAME"
+    elif [ -f /etc/lsb-release ]; then
+      . /etc/lsb-release
+      echo "linux Distros: $DISTRIB_ID"
+    else
+      echo "unknwon linux Distros"
+    fi
+}
+
+check_python_version() {
+    if command -v python3 &>/dev/null; then
+        PYTHON_VERSION=$(python3 --version)
+        echo "python version: $PYTHON_VERSION"
+    elif command -v python &>/dev/null; then
+        PYTHON_VERSION=$(python --version)
+        echo "python version: $PYTHON_VERSION"
+    else
+        echo "python version not installed, please install python for use phantom"
+    fi
+}
+
+check_package_manager() {
+  if command -v apt &>/dev/null; then
+    echo "package manager: apt"
+  elif command -v pacman &>/dev/null; then
+    echo "package manager: pacman"
+  else
+    echo "Package Manager: unknown"
+  fi
+}
+
+clear
+echo "welcome..."
+sleep 1
+check_distro
+check_python_version
+check_package_manager
+sleep 1
+
+if command -v python3 &>/dev/null; then
+  echo "installing additional packages"
+  pip3 install -r requirements.txt --break-system-packages
+  clear
+  python3 phantom/phantom.py
+elif command -v python &>/dev/null; then
+  echo "installing additional packages"
+  pip install -r requirements.txt --break-system-packages
+  clear
+  python phantom/phantom.py
+else
+  echo "python not installed, installing python..."
+  if command -v apt &>/dev/null; then
+    command sudo apt get install python
+  elif command -v pacman &>/dev/null; then
+    command sudo pacman -S python
+  fi
+fi
