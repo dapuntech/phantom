@@ -1,17 +1,17 @@
 import util.constant as constant
-import util.sys_info as sys_info
-import util.package_version as package_version
+import util.package as sys_info
+import util.package as package_version
 import subprocess
 from prettytable import PrettyTable
 from typing import Union
 import time
 import threading
 
-TAB: str = "\t" * 3
 package_info = sys_info.show_package_info()
 done = False
 
 
+# do not change this function unless you are maintainer
 def menu_banner() -> None:
     print(f"""{constant.BOLD}{constant.RED}
 ██████╗░██╗░░██╗░█████╗░███╗░░██╗████████╗░█████╗░███╗░░░███╗
@@ -20,10 +20,13 @@ def menu_banner() -> None:
 ██╔═══╝░██╔══██║██╔══██║██║╚████║░░░██║░░░██║░░██║██║╚██╔╝██║
 ██║░░░░░██║░░██║██║░░██║██║░╚███║░░░██║░░░╚█████╔╝██║░╚═╝░██║
 ╚═╝░░░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝░░░╚═╝░░░░╚════╝░╚═╝░░░░░╚═╝
-{constant.NEWLINE}
+{constant.NEWLINE}{constant.RESET}
 """)
     print(
-        f"{constant.GREEN}version: {constant.RESET}{constant.BOLD}{constant.VERSION}{constant.RESET}"
+        f"{constant.message_color('green', 'version:')}{constant.BOLD}{constant.VERSION}"
+    )
+    print(
+        f"{constant.message_color('green', 'package version:')} {sys_info.show_package_info()}{constant.NEWLINE}"
     )
 
     menu_info()
@@ -35,9 +38,6 @@ def menu_info() -> None:
         - available tool: list of tool available
         - install tool: install tool
     """
-    print(
-        f"{constant.GREEN}package info:{constant.RESET} {sys_info.show_package_info()}{constant.NEWLINE}"
-    )
     print(f"{constant.BOLD}1. Available Tool{constant.RESET}")
     print(f"{constant.BOLD}2. Install Tool{constant.RESET}")
 
@@ -50,6 +50,10 @@ def spinner(package_name: str) -> None:
     Parameter:
         package_name(str): package name to showing on package name
     """
+    if not isinstance(package_name, str):
+        print(
+            f"{constant.message_color('red', 'error:')} package must be string, not {type(package_name)}"
+        )
     # Define the spinner characters
     spinner_chars = ["⢿", "⣻", "⣽", "⣾", "⣷", "⣯", "⣟", "⡿"]
 
@@ -99,18 +103,28 @@ def run_install(command: list[str], package_name: str) -> None:
         version = package_version.get_package_version(package_info, package_name)
 
         print(
-            f"\r{constant.GREEN}Successfully installed {package_name} (version: {version}){constant.RESET}"
+            f"\r{constant.message_color('green', 'Successfully installed')} {package_name} (version: {version})"
         )
     except subprocess.CalledProcessError:
         done = True
         spinner_thread.join()
-        print("\rError installing package")
+        print(constant.message_color("red", "\rError installing package"))
 
 
 def install_package(package_name: str) -> Union[list, None]:
+    """
+    function to install package
+
+    Parameter:
+        package_name(str): package to install
+
+    return:
+        - list: list of package installed
+        - None: if package is not supported
+    """
     if not isinstance(package_name, str):
         print(
-            f"{constant.RED}error:{constant.RESET}package must be string, not {type(package_name)}"
+            f"{constant.message_color('red', 'error:')}package must be string, not {type(package_name)}"
         )
     if package_info == "apt":
         command = ["sudo", "apt-get", "install", package_name, "-y"]
@@ -125,6 +139,9 @@ def install_package(package_name: str) -> Union[list, None]:
 
 
 def available_tool() -> None:
+    """
+    function to show available tool
+    """
     list_of_tool = {
         "sqlmap": "Automates SQL injection testing and exploitation.",
         "metasploit": "Framework for developing and executing exploits.",
@@ -140,7 +157,7 @@ def available_tool() -> None:
 
 def install_tool() -> None:
     available_tool()
-    input_data = input("enter your choice: ")
+    input_data = input("enter your choice for installation: ")
     if input_data == "1":
         install_package("sqlmap")
     elif input_data == "2":

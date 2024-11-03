@@ -12,4 +12,4 @@ if __name__ == "__main__":
                 ui_info.install_tool()
                 ui_info.menu_info()
     except KeyboardInterrupt:
-        print("exiting...")
+        print("\nexiting...")
