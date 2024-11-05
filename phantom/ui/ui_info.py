@@ -171,6 +171,8 @@ def install_tool() -> None:
             install_package("aircrack-ng")
         case "5":
             install_package("airflood")
+        case "6":
+            install_package("hping")
         case _:
             print(
                 f"{constant.message_color('red', 'invalid choice')}{constant.NEWLINE}{constant.message_color('yellow', 'TODO:')} implemented{constant.NEWLINE}"

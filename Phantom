@@ -68,8 +68,11 @@ if [[ "$1" == "--install" ]]; then
     echo "running with argument"
     echo "./Phantom --run"
   fi
-  if [[ "$1" == "--run" ]]; then
+elif [[ "$1" == "--run" ]]; then
     clear
     python3 phantom/phantom.py
-  fi
+elif [[ "$1" == "--help" ]]; then
+    echo "basic usage"
+    echo "--install : install phantom"
+    echo "--run : run phantom if already installed"
 fi
