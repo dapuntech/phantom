@@ -7,6 +7,9 @@ from prettytable import PrettyTable
 from typing import Union
 import time
 import threading
+import requests
+import os
+
 
 package_info = sys_info.show_package_info()
 done = False
@@ -112,6 +115,77 @@ def run_install(command: list[str], package_name: str) -> None:
         print(constant.message_color("red", "\rError installing package"))
 
 
+def install_from_repository(package_name: str) -> Union[list, None]:
+    """
+    function to install package from its repository
+
+    Parameter:
+        package_name(str): package to install
+
+    return:
+        - list: list of package installed
+        - None: if package is not supported
+    """
+
+    spinner_thread = threading.Thread(target=spinner, args=(package_name,))
+    try:
+        global done
+
+        # Load the list of package repository
+        with open("phantom/ui/list_package_repo.txt", "r") as file:
+            loaded_repo = json.load(file)
+        list_repo = loaded_repo
+
+        # Run sudo before installing to make sure user has permission to install
+        subprocess.run(
+            ["sudo", f"{package_info}"],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        spinner_thread.start()
+
+        # Downloading the script from the repository
+        response = requests.get(list_repo[package_name])
+
+        # Check if the response status code is 200
+        if response.status_code == 200:
+            # Save the script to a file named {package_name}
+            with open(package_name, "w") as file:
+                file.write(response.text)
+
+            # Make the script executable
+            os.chmod(package_name, 0o755)
+
+            done = True
+            spinner_thread.join()
+
+            # Installing {package_name}
+            print("\n")
+            subprocess.run(
+                [f"./{package_name}"],
+                shell=True,
+                check=True,
+            )
+        else:
+            # If the response status code is not 200, print an error message
+            done = True
+            spinner_thread.join()
+            print(f"Failed to download script: HTTP status code {response.status_code}")
+    except Exception as e:
+        # Catch any exception
+        done = False
+        spinner_thread.join()
+        print(f"failed to install {package_name}: {e}")
+    finally:
+        # Clean up installed script
+        print("cleaning up...")
+        done = True
+        spinner_thread.join()
+        if os.path.exists(package_name):
+            os.remove(package_name)
+
+
 def install_package(package_name: str) -> Union[list, None]:
     """
     function to install package
@@ -164,7 +238,7 @@ def install_tool() -> None:
         case "1":
             install_package("sqlmap")
         case "2":
-            install_package("metasploit")
+            install_from_repository("metasploit")
         case "3":
             install_package("nmap")
         case "4":
