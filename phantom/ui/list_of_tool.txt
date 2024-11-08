@@ -5,4 +5,5 @@
   "aircrak-ng": "Key cracker for the 802.11 WEP and WPA-PSK protocols",
   "airflood": "A modification of aireplay that allows for a DoS of the AP.",
   "hping": "Command-line oriented TCP/IP packet assembler/analyzer."
+  "bettercap": "performing reconnaissance and attacking WiFi networks, Bluetooth Low Energy devices, wireless HID devices, CAN-bus and IPv4/IPv6 networks."
 }

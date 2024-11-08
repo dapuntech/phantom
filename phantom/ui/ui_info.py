@@ -233,20 +233,24 @@ def install_tool() -> None:
     function to install available tools
     """
     available_tool()
-    input_data = input("enter your choice for installation: ")
+    input_data = int(input("enter your choice for installation: "))
+    if not isinstance(input_data, int):
+        print(constant.message_color("red", "input data must be int"))
     match input_data:
-        case "1":
+        case 1:
             install_package("sqlmap")
-        case "2":
+        case 2:
             install_from_repository("metasploit")
-        case "3":
+        case 3:
             install_package("nmap")
-        case "4":
+        case 4:
             install_package("aircrack-ng")
-        case "5":
+        case 5:
             install_package("airflood")
-        case "6":
+        case 6:
             install_package("hping")
+        case 7:
+            install_package("bettercap")
         case _:
             print(
                 f"{constant.message_color('red', 'invalid choice')}{constant.NEWLINE}{constant.message_color('yellow', 'TODO:')} implemented{constant.NEWLINE}"
